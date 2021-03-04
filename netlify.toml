@@ -1,0 +1,15 @@
+[build]
+  base = "app/"
+  publish = "dist/"
+  command = "npm run build"
+  environment = { NODE_ENV = "development" }
+
+[context.master]
+  environment = { NODE_ENV = "production" }
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  [redirects.headers]
+  X-From = "Netlify"
