@@ -1,0 +1,19 @@
+{
+    "name": "Heroku server",
+    "description": "My server backend",
+    "env": {
+      "PROJECT_PATH": {
+        "description": "Used by subdir-heroku-buildpack to change the directory structure",
+        "value": "server"
+      }
+    },
+    "image": "heroku/nodejs",
+    "buildpacks": [
+      {
+        "url": "https://github.com/timanovsky/subdir-heroku-buildpack"
+      },
+      {
+        "url": "heroku/nodejs"
+      }
+    ]
+  }
