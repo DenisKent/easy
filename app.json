@@ -1,6 +1,7 @@
 {
     "name": "Heroku server",
     "description": "My server backend",
+    "repository": "https://github.com/DenisKent/easy/tree/master",
     "env": {
       "PROJECT_PATH": {
         "description": "Used by subdir-heroku-buildpack to change the directory structure",
