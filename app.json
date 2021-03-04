@@ -8,6 +8,16 @@
         "value": "server"
       }
     },
+    "addons": [
+        {
+          "plan": "bonsai:sandbox-6",
+          "as": "ELASTICSEARCH"
+        },
+        {
+          "plan": "heroku-postgresql:hobby-dev",
+          "as": "POSTGRESQL"
+        }
+    ],
     "image": "heroku/nodejs",
     "buildpacks": [
       {

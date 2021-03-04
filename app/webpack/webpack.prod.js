@@ -3,6 +3,6 @@ const webpackBase = require("./webpack.base");
 
 module.exports = env => {
   return merge(webpackBase, {
-    mode: "production",
+    mode: "production"
   });
 };

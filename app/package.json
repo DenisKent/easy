@@ -2,7 +2,6 @@
   "name": "app",
   "version": "1.0.0",
   "description": "A simple app",
-  "main": "./src/index.js",
   "repository": "https://github.com/DenisKent/easy",
   "scripts": {
     "dev": "webpack serve --config webpack/webpack.dev.js ",
@@ -10,9 +9,7 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "@babel/core": "^7.13.8",
     "@babel/plugin-transform-runtime": "^7.13.9",

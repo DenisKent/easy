@@ -54,6 +54,7 @@
     "react/button-has-type": ["off"],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "no-plusplus": ["off"],
+    "ignorePatterns": ["webpack/*.js"],
     "import/extensions": [
       "error",
       "ignorePackages",
