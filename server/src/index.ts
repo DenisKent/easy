@@ -11,6 +11,7 @@ const connectToDB = async () => {
     await createConnection({
         type: "postgres",
         url: process.env.DATABASE_URL,
+        password: "null",
         // database: process.env.DATABASE_NAME,
         // dropSchema: true,
         // entities: [join(__dirname, "./models/entities/*.*")],
@@ -24,4 +25,6 @@ connectToDB()
     app.listen(PORT, () => {
       console.log(`⚡️[server]: Server is running at https://localhost:${PORT}`);
     });
+}).catch(err => {
+    console.error("error duing db connection", err)
 });
