@@ -1,7 +1,7 @@
 [build]
   base = "app"
   publish = "dist/"
-  command = "npm install,npm run build"
+  command = "npm install && npm run build"
   environment = { NODE_ENV = "development", NODE_VERSION = "14.15.3" }
 
 [context.master]
