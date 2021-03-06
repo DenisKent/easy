@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/DenisKent/easy/issues"
   },
-  "homepage": "https://github.com/DenisKent/easy#readme"
+  "homepage": "https://github.com/DenisKent/easy#readme",
+  "dependencies": {
+    "faunadb": "^4.1.1"
+  }
 }
