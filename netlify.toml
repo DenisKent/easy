@@ -4,7 +4,7 @@
   command = "cd app && npm install && npm run build"
   environment = { NODE_ENV = "development", NODE_VERSION = "14.15.3" }
   
-  functions = "functions"
+  functions = "lambda/functions"
 
 [context.master]
   environment = { NODE_ENV = "production" }
@@ -21,3 +21,11 @@
   status = 200
   [redirects.headers]
   X-From = "Netlify"
+
+[dev]
+  command = "npm run dev:app"
+  port = 9000
+  targetPort = 7777
+  publish = "/app/dist/" 
+  autoLaunch = true
+  framework = "#custom"

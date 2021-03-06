@@ -1,0 +1,19 @@
+{
+  "name": "easy",
+  "version": "1.0.0",
+  "description": "Link to create heroku server app:\r https://heroku.com/deploy?template=https://github.com/DenisKent/easy/tree/master",
+  "main": "index.js",
+  "scripts": {
+    "dev:app": "cd app && npm run dev"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DenisKent/easy.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/DenisKent/easy/issues"
+  },
+  "homepage": "https://github.com/DenisKent/easy#readme"
+}
