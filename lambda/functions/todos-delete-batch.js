@@ -1,5 +1,5 @@
 import faunadb from 'faunadb'
-import getId from './utils/getId'
+import getId from '../utils/getId'
 
 const q = faunadb.query
 const client = new faunadb.Client({
