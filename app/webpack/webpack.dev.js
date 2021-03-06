@@ -7,7 +7,7 @@ module.exports = env => {
     mode: "development",
     devServer: {
       contentBase: path.join(__dirname, "../dist"),
-      open: true,
+      open: false,
       port: 7777,
     },
   });
