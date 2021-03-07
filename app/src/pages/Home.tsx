@@ -14,8 +14,7 @@ const Home: React.FC = () => {
   };
   const queryClient = useQueryClient();
 
-  const { isLoading, error, data: todos = [] } = useQuery("todos", readAll);
-  console.log(todos);
+  const { data: todos = [] } = useQuery("todos", readAll);
 
   return (
     <div>
@@ -23,15 +22,15 @@ const Home: React.FC = () => {
       {todos.map((todo: any) => {
         const { id } = todo.ref["@ref"];
         return (
-          <p
+          <button
             key={id}
             onClick={async () => {
-              const updatedTodo = await update(id, { title: todo.data.title, completed: !todo.data.completed });
+              const _updatedTodo = await update(id, { title: todo.data.title, completed: !todo.data.completed });
               queryClient.invalidateQueries("todos");
             }}
           >
             {JSON.stringify(todo.data)}
-          </p>
+          </button>
         );
       })}
       <button onClick={() => create(myTodo)}>Create todo</button>

@@ -24,21 +24,27 @@
     "es6": true,
     "jest": true
   },
+  "ignorePatterns": ["webpack/*"],
   "rules": {
     "arrow-body-style": "off",
     "react-hooks/rules-of-hooks": "error",
     "react-hooks/exhaustive-deps": "warn",
     "react/prop-types": "off",
     "no-use-before-define": [0],
+    "no-underscore-dangle": "off",
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/no-unused-vars":  ["warn", { "varsIgnorePattern": "^_" }],
     "@typescript-eslint/no-use-before-define": [1],
     "no-param-reassign": ["off"],
     "no-nested-ternary": ["off"],
     "camelcase": ["off"],
-    "prettier/prettier": ["error", {"printWidth": 120 }],
+    "prettier/prettier": ["error", {"printWidth": 120, "endOfLine":"auto" }],
     "object-property-newline": ["off"],
     "no-else-return": ["off"],
     "import/prefer-default-export": ["off"],
     "jsx-a11y/href-no-hash": ["off"],
+    "jsx-a11y/click-events-have-key-events": "off",
     "jsx-a11y/label-has-for": [ 2, {
       "required": {
           "some": [ "nesting", "id" ]
@@ -54,7 +60,6 @@
     "react/button-has-type": ["off"],
     "import/no-extraneous-dependencies": ["error", {"devDependencies": true}],
     "no-plusplus": ["off"],
-    "ignorePatterns": ["webpack/*.js"],
     "import/extensions": [
       "error",
       "ignorePackages",
@@ -73,7 +78,7 @@
     },
     "import/resolver":  {
       "webpack": {
-        "config": "webpack/webpack.base.js"
+        "config": "app/webpack/webpack.base.js"
       }
     }
   }

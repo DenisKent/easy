@@ -3,8 +3,8 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
-  entry: "./src/index.tsx",
-  context: path.resolve(__dirname, '../'),
+  entry: "./app/src/index.tsx",
+  context: path.resolve(__dirname, "../../"),
 
   output: {
     path: path.join(__dirname, "../dist"),
@@ -12,7 +12,7 @@ module.exports = {
     clean: true
   },
   optimization: {
-    moduleIds: 'deterministic'
+    moduleIds: "deterministic"
   },
 
   module: {
@@ -64,8 +64,8 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       filename: "index.html",
-      template: "./src/index.html",
-      favicon: "./assets/favicon.ico"
+      template: "./app/src/index.html",
+      favicon: "./app/assets/favicon.ico"
     }),
     new ForkTsCheckerWebpackPlugin({
       async: false
