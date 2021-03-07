@@ -2,12 +2,12 @@
   base = "./"
   publish = "/app/dist/"
   command = "npm run build:app"
-  environment = { NODE_ENV = "development", NODE_VERSION = "14.15.3" }
+  environment = { NODE_ENV = "development", NODE_VERSION = "14.15.3", DOMAIN = "http://localhost:9000" }
   
   functions = "functions"
 
 [context.master]
-  environment = { NODE_ENV = "production" }
+  environment = { NODE_ENV = "production", DOMAIN = "https://deniskent.com" }
 
 
 [[redirects]]

@@ -1,5 +1,6 @@
 import React from "react";
 import { useQuery, useQueryClient } from "react-query";
+import { useAuth0 } from "@auth0/auth0-react";
 
 import { create, readAll, update } from "../api/todos";
 
@@ -12,6 +13,8 @@ const Home: React.FC = () => {
   const add = (a: number, b: number): number => {
     return a + b;
   };
+  const { isLoading, isAuthenticated, error, user, loginWithRedirect, logout } = useAuth0();
+  console.log({ isLoading, isAuthenticated, error, user, loginWithRedirect, logout });
   const queryClient = useQueryClient();
 
   const { data: todos = [] } = useQuery("todos", readAll);
@@ -34,6 +37,7 @@ const Home: React.FC = () => {
         );
       })}
       <button onClick={() => create(myTodo)}>Create todo</button>
+      <button onClick={() => loginWithRedirect()}>Login</button>
     </div>
   );
 };
