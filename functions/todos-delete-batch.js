@@ -1,5 +1,5 @@
 import faunadb from 'faunadb'
-import getId from '../utils/getId'
+import getId from './utils/getId'
 
 const q = faunadb.query
 const client = new faunadb.Client({
@@ -7,9 +7,15 @@ const client = new faunadb.Client({
 })
 
 exports.handler = (event, context, callback) => {
-  const id = getId(event.path)
-  console.log(`Function 'todo-read' invoked. Read id: ${id}`)
-  return client.query(q.Get(q.Ref(`classes/todos/${id}`)))
+  const data = JSON.parse(event.body)
+  console.log('data', data)
+  console.log("Function `todo-delete-batch` invoked", data.ids)
+  // construct batch query from IDs
+  const deleteAllCompletedTodoQuery = data.ids.map((id) => {
+    return q.Delete(q.Ref(`classes/todos/${id}`))
+  })
+  // Hit fauna with the query to delete the completed items
+  return client.query(deleteAllCompletedTodoQuery)
   .then((response) => {
     console.log("success", response)
     return callback(null, {
