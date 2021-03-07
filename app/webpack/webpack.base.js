@@ -4,6 +4,7 @@ const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.tsx",
+  context: path.resolve(__dirname, '../'),
 
   output: {
     path: path.join(__dirname, "../dist"),
