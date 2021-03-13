@@ -7,7 +7,9 @@ const client = new faunadb.Client({
 
 const collectionNames = ["users"];
 
-const indexes = [{name: "users_search_by_google_id", source: q.Collection('users'), terms: [{ field: ["data", "google_id"] }], unique: true}];
+const indexes = [
+  {name: "users_search_by_google_id", source: q.Collection('users'), terms: [{ field: ["data", "google_id"] }], unique: true}
+];
 
 exports.handler = async (event, context) => {
   try{

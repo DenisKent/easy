@@ -4,13 +4,13 @@ import { createUser } from "../api/users";
 import useStore from "../store";
 
 const Auth: React.FC = () => {
-  const loginInStore = useStore((state) => state.login);
+  const [login, logout] = useStore((state) => [state.login, state.logout]);
 
   const onLoginSuccess = async (response: any) => {
     const { googleId, name } = response.profileObj;
-    const user = { name, google_id: googleId };
-    await createUser(user);
-    loginInStore({ name: user.name });
+    const userToCreate = { name, google_id: googleId };
+    const createdUser = await createUser(userToCreate);
+    login({ name: createdUser.name, id: createdUser.id, google_id: createdUser.google_id });
     console.log("LoginSuccess", response);
   };
 
@@ -23,6 +23,7 @@ const Auth: React.FC = () => {
 
   const onLogout = () => {
     console.log("onLogout");
+    logout();
   };
 
   return (
