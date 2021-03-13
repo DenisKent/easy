@@ -4,13 +4,13 @@ import { createUser } from "../api/users";
 import useStore from "../store";
 
 const Auth: React.FC = () => {
-  const [login, logout] = useStore((state) => [state.login, state.logout]);
-
+  const [login, logout, user] = useStore((state) => [state.login, state.logout, state.user]);
+  console.log(user);
   const onLoginSuccess = async (response: any) => {
-    const { googleId, name } = response.profileObj;
-    const userToCreate = { name, google_id: googleId };
+    const { googleId, name, email } = response.profileObj;
+    const userToCreate = { name, google_id: googleId, email };
     const createdUser = await createUser(userToCreate);
-    login({ name: createdUser.name, id: createdUser.id, google_id: createdUser.google_id });
+    login({ name: createdUser.name, id: createdUser.id, google_id: createdUser.google_id, email: createdUser.email });
     console.log("LoginSuccess", response);
   };
 
@@ -36,6 +36,16 @@ const Auth: React.FC = () => {
         cookiePolicy="single_host_origin"
         isSignedIn={true}
       />
+      {/* {user.google_id && (
+        <GoogleLogin
+          clientId={process.env.GOOGLE_OAUTH_CLIENT_ID}
+          buttonText="Login2"
+          onSuccess={onLoginSuccess}
+          onFailure={onError}
+          cookiePolicy="single_host_origin"
+          loginHint={user.google_id}
+        />
+      )} */}
       <GoogleLogin
         clientId={process.env.GOOGLE_OAUTH_CLIENT_ID}
         buttonText="Give Permissions To Track Steps"
@@ -44,6 +54,7 @@ const Auth: React.FC = () => {
         responseType="code"
         accessType="offline"
         cookiePolicy="single_host_origin"
+        loginHint={user.email}
       />
       <GoogleLogout clientId={process.env.GOOGLE_OAUTH_CLIENT_ID} buttonText="Logout" onLogoutSuccess={onLogout} />
     </section>

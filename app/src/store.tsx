@@ -1,8 +1,8 @@
 import create from "zustand";
 
 type State = {
-  user: { isLoggedIn: boolean; id?: string; name?: string; google_id?: string };
-  login: (user: { name: string; id: string; google_id?: string }) => void;
+  user: { isLoggedIn: boolean; id?: string; name?: string; google_id?: string; email?: string };
+  login: (user: { name: string; id: string; google_id?: string; email?: string }) => void;
   logout: () => void;
 };
 

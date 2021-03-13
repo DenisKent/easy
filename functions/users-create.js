@@ -16,24 +16,24 @@ exports.handler = async (event, context) => {
   console.log({doesUserExist})
   if(!doesUserExist){
     const newUser = await client.query(q.Create("users", {data}));
-    console.log(newUser);
     return {
       statusCode: 200,
       body: JSON.stringify({
         name: newUser.data.name,
         google_id: newUser.data.google_id,
-        id: newUser.ref.id
+        id: newUser.ref.id,
+        email: newUser.data.email
       })
     };
 
   } else {
     const existingUser = await client.query(q.Get(q.Match(q.Index("users_search_by_google_id"), data.google_id)))
-    console.log({existingUser})
     return {
       statusCode: 200,
       body: JSON.stringify({
         name: existingUser.data.name,
         google_id: existingUser.data.google_id,
+        email: existingUser.data.email,
         id: existingUser.ref.id
       })
   
