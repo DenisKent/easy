@@ -10,9 +10,6 @@ const myTodo = {
 };
 
 const Home: React.FC = () => {
-  const add = (a: number, b: number): number => {
-    return a + b;
-  };
   const { isLoading, isAuthenticated, error, user, loginWithRedirect, logout } = useAuth0();
   console.log({ isLoading, isAuthenticated, error, user, loginWithRedirect, logout });
   const queryClient = useQueryClient();
@@ -21,7 +18,7 @@ const Home: React.FC = () => {
 
   return (
     <div>
-      <h1>Hello typescript world, {add(5, 5)}</h1>
+      <h1>{`Hello ${user?.given_name || "Friend"}`}</h1>
       {todos.map((todo: any) => {
         const { id } = todo.ref["@ref"];
         return (
@@ -36,8 +33,16 @@ const Home: React.FC = () => {
           </button>
         );
       })}
-      <button onClick={() => create(myTodo)}>Create todo</button>
+      <button
+        onClick={async () => {
+          await create(myTodo);
+          queryClient.invalidateQueries("todos");
+        }}
+      >
+        Create todo
+      </button>
       <button onClick={() => loginWithRedirect()}>Login</button>
+      <button onClick={() => logout({ returnTo: process.env.DOMAIN })}>Logout</button>
     </div>
   );
 };
