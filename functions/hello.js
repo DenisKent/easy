@@ -20,7 +20,7 @@ const createClasses = async () => {
 }
 
 const createindexes = async () => {
-    try{
+    try {
         const index = client.query(q.Create(q.Ref("indexes"), {name: "all_todos", source: q.Ref("classes/todos")}))
         return true
     } catch (err){
