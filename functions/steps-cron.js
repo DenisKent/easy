@@ -1,16 +1,19 @@
 const faunadb = require('faunadb');
+const dayjs = require("dayjs")
+const {refreshAccessToken} = require("./utils/oAuth")
 
+const got = require("got")
 const q = faunadb.query
 const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET
 })
 
-exports.handler = async (event, context) => {
-  try {
-
-  const data = JSON.parse(event.body)
-  
-  const response = await got("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", {
+const getStepsData = async (googleAccessToken) => {
+  const days = 7;
+    const startTimeMillis = dayjs().subtract(days - 1, "day").startOf('day').valueOf() + 1;
+    const endTimeMillis = dayjs().valueOf();
+    const bucketSize = 24*60*60*1000
+    const response = await got("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", {
             method: "POST",
             headers: { Authorization: `Bearer ${googleAccessToken}` },
             json: {
@@ -35,11 +38,30 @@ exports.handler = async (event, context) => {
                 // steps2: bucket.dataset[1].point[0].value[0].fpVal
             }
         })
-  
 
+        return mappedBuckets;
+}
+
+exports.handler = async (event, _context) => {
+  try {
+    const users = await client.query(q.Map(
+      q.Paginate(q.Documents(q.Collection('users'))),
+      q.Lambda(x => q.Get(x))
+    ));
+  
+    const userBuckets = await Promise.all(users.data.map(async user => {
+      const {access_token: freshAccessToken, expires_in} = await refreshAccessToken(user.data.google_refresh_token);
+      console.log({freshAccessToken})
+      const steps = await getStepsData(freshAccessToken);
+      const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id),
+      { data: { steps }}
+      ));
+      return steps;
+    }));
+  
   return {
     statusCode: 200,
-    body: JSON.stringify({ mappedBuckets })
+    body: JSON.stringify({ userBuckets })
   };
 
 } catch (err){
