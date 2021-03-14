@@ -69,7 +69,7 @@ exports.handler = async (event, _context) => {
   console.log("error", err)
   return {
     statusCode: 400,
-    body: JSON.stringify(err)
+    body: JSON.stringify({})
   }
 }
 }
