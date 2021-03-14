@@ -1,4 +1,5 @@
 const path = require("path");
+const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin");
 
@@ -62,10 +63,16 @@ module.exports = {
     }
   },
   plugins: [
+    new webpack.DefinePlugin({
+      "process.env": {
+        DOMAIN: JSON.stringify(process.env.DOMAIN),
+        GOOGLE_OAUTH_CLIENT_ID: JSON.stringify(process.env.GOOGLE_OAUTH_CLIENT_ID)
+      }
+    }),
     new HtmlWebpackPlugin({
       filename: "index.html",
       template: "./app/src/index.html",
-      favicon: "./app/assets/favicon.ico"
+      favicon: "./app/assets/favicon.png"
     }),
     new ForkTsCheckerWebpackPlugin({
       async: false
