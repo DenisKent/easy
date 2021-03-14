@@ -1,6 +1,6 @@
 import React from "react";
 import { GoogleLogin, GoogleLogout } from "react-google-login";
-import { createUser } from "../api/users";
+import { createUser, updateUser } from "../api/users";
 import useStore from "../store";
 
 const Auth: React.FC = () => {
@@ -17,8 +17,11 @@ const Auth: React.FC = () => {
   const onError = (response: any) => {
     console.log("error", response);
   };
-  const onPermissionSuccess = (response: any) => {
-    console.log("PermissionSuccess", response);
+  const onPermissionSuccess = async (response: any) => {
+    if (user.id) {
+      updateUser({ id: user.id, google_code: response.code });
+      console.log("PermissionSuccess", response.code);
+    }
   };
 
   const onLogout = () => {
@@ -31,30 +34,19 @@ const Auth: React.FC = () => {
       <GoogleLogin
         clientId={process.env.GOOGLE_OAUTH_CLIENT_ID}
         buttonText="Login"
-        onSuccess={onLoginSuccess}
         onFailure={onError}
         cookiePolicy="single_host_origin"
         isSignedIn={true}
+        onSuccess={onLoginSuccess}
       />
-      {/* {user.google_id && (
-        <GoogleLogin
-          clientId={process.env.GOOGLE_OAUTH_CLIENT_ID}
-          buttonText="Login2"
-          onSuccess={onLoginSuccess}
-          onFailure={onError}
-          cookiePolicy="single_host_origin"
-          loginHint={user.google_id}
-        />
-      )} */}
       <GoogleLogin
         clientId={process.env.GOOGLE_OAUTH_CLIENT_ID}
         buttonText="Give Permissions To Track Steps"
-        onSuccess={onPermissionSuccess}
         onFailure={onError}
         responseType="code"
         accessType="offline"
         cookiePolicy="single_host_origin"
-        loginHint={user.email}
+        onSuccess={onPermissionSuccess}
       />
       <GoogleLogout clientId={process.env.GOOGLE_OAUTH_CLIENT_ID} buttonText="Logout" onLogoutSuccess={onLogout} />
     </section>
