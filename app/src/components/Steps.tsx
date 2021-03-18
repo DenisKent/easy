@@ -1,10 +1,17 @@
 import React from "react";
 import { useQuery } from "react-query";
 import MaterialTable from "material-table";
+import dayjs from "dayjs";
 import { getAllUserSteps } from "../api/steps";
 
 const createColumns = (flattenedUsers: any[]) => {
-  return Object.keys(flattenedUsers[0] || {}).map((key) => ({ title: key, field: key }));
+  return Object.keys(flattenedUsers[0] || {}).map((key) => {
+    if (key === "name") {
+      return { title: key, field: key };
+    } else {
+      return { title: dayjs(key, "YYYY-MM-DD").format("D MMM"), field: key };
+    }
+  });
 };
 
 type allStepsData = {
