@@ -50,13 +50,19 @@ exports.handler = async (event, _context) => {
     ));
   
     const userBuckets = await Promise.all(users.data.map(async user => {
-      const {access_token: freshAccessToken, expires_in} = await refreshAccessToken(user.data.google_refresh_token);
-      console.log({freshAccessToken})
-      const steps = await getStepsData(freshAccessToken);
-      const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id),
-      { data: { steps }}
-      ));
-      return steps;
+      try {
+        const {access_token: freshAccessToken, expires_in} = await refreshAccessToken(user.data.google_refresh_token);
+        console.log({freshAccessToken})
+        const steps = await getStepsData(freshAccessToken);
+        const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id),
+        { data: { steps }}
+        ));
+        return steps;
+
+      } catch (err){
+        console.error();
+        return [];
+      }
     }));
   
   return {

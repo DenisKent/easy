@@ -49,7 +49,6 @@ const Auth: React.FC = () => {
         onSuccess={onPermissionSuccess}
         scope="profile email https://www.googleapis.com/auth/fitness.activity.read https://www.googleapis.com/auth/fitness.location.read"
       />
-      )
       <GoogleLogout clientId={process.env.GOOGLE_OAUTH_CLIENT_ID} buttonText="Logout" onLogoutSuccess={onLogout} />
     </section>
   );
