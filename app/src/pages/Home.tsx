@@ -1,5 +1,6 @@
 import React from "react";
 import Auth from "../components/Auth";
+import Steps from "../components/Steps";
 import useStore from "../store";
 
 const Home: React.FC = () => {
@@ -10,6 +11,7 @@ const Home: React.FC = () => {
         <h1>{`Hello ${user.name || ""}`}</h1>
       </section>
       <Auth />
+      <Steps />
     </div>
   );
 };

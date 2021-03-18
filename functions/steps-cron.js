@@ -33,7 +33,7 @@ const getStepsData = async (googleAccessToken) => {
             const timeInMiddleOfPeriod = bucket.startTimeMillis + (bucket.endTimeMillis-startTimeMillis)/2
 
             return {
-                dayOfWeek: dayjs(parseInt(startTimeMillis)).format("dddd D MMM"),
+                date: dayjs(parseInt(startTimeMillis)).format("YYYY-MM-DD"),
                 stepCount: bucket.dataset[0].point[0].value[0].intVal,
                 // steps2: bucket.dataset[1].point[0].value[0].fpVal
             }
@@ -52,15 +52,16 @@ exports.handler = async (event, _context) => {
     const userBuckets = await Promise.all(users.data.map(async user => {
       try {
         const {access_token: freshAccessToken, expires_in} = await refreshAccessToken(user.data.google_refresh_token);
-        console.log({freshAccessToken})
         const steps = await getStepsData(freshAccessToken);
         const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id),
         { data: { steps }}
         ));
+
+        console.log("success", steps)
         return steps;
 
       } catch (err){
-        console.error();
+        console.error(err);
         return [];
       }
     }));
