@@ -3,7 +3,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import Home from "../pages/Home";
 
 const queryClient = new QueryClient();
-
+//
 const App: React.FC = () => {
   return (
     <QueryClientProvider client={queryClient}>
