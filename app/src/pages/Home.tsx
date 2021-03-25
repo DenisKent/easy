@@ -8,7 +8,7 @@ const Home: React.FC = () => {
   return (
     <div>
       <section>
-        <h1>{`Hello ${user.name || ""}`}</h1>
+        <h1>{`Hi ${user.name || ""}`}</h1>
       </section>
       <Auth />
       <Steps />
