@@ -15,7 +15,7 @@
 [dev]
   command = "npm run dev:app"
   port = 9000
-  targetPort = 7777
+  targetPort = 6666
   publish = "/app/dist/" 
   autoLaunch = true
   framework = "#custom"
