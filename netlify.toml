@@ -11,7 +11,9 @@
 
 [[plugins]]
   package = "netlify-plugin-cypress"
-
+  [plugins.inputs]
+  record = true
+  browser = "chrome"
 [dev]
   command = "npm run dev:app"
   port = 9000

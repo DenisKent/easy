@@ -2,5 +2,7 @@
   "fixturesFolder": false,
   "supportFile": false,
   "pluginsFile": false,
-  "baseUrl": "http://localhost:9000"
+  "baseUrl": "http://localhost:9000",
+  "projectId": "ntcucj",
+  "videoUploadOnPasses": false
 }
