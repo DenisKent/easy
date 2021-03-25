@@ -3,6 +3,6 @@
 describe('Example site', () => {
   it('loads', () => {
     cy.visit('/')
-    cy.contains('h1', 'Hell1o').should('be.visible')
+    cy.contains('h1', 'Hel1lo').should('be.visible')
   })
 })
