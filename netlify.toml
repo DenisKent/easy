@@ -2,13 +2,7 @@
   base = "./"
   publish = "/app/dist/"
   command = "npm run build:app"
-  environment = {
-    NODE_ENV = "development", 
-    NODE_VERSION = "14.15.3", 
-    DOMAIN = "http://localhost:9000", 
-    CYPRESS_CACHE_FOLDER: "./node_modules/CypressBinary",
-    TERM = "xterm" 
-  }
+  environment = { NODE_ENV = "development", NODE_VERSION = "14.15.3", DOMAIN = "http://localhost:9000", CYPRESS_CACHE_FOLDER = "./node_modules/CypressBinary", TERM = "xterm" }
   
   functions = "functions"
 
