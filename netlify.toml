@@ -8,6 +8,8 @@
 
 [context.master]
   environment = { NODE_ENV = "production", DOMAIN = "https://deniskent.com" }
+[[plugins]]
+  package = "netlify-plugin-cypress"
 
 [dev]
   command = "npm run dev:app"
