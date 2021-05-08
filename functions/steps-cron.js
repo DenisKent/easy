@@ -8,55 +8,59 @@ const client = new faunadb.Client({
   secret: process.env.FAUNADB_SECRET
 })
 
-const getStepsData = async (googleAccessToken) => {
+
+const getStepsData = async (userId, googleAccessToken) => {
   const days = 7;
-    const startTimeMillis = dayjs().subtract(days - 1, "day").startOf('day').valueOf() + 1;
-    const endTimeMillis = dayjs().valueOf();
-    const bucketSize = 24*60*60*1000
-    const response = await got("https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate", {
-            method: "POST",
-            headers: { Authorization: `Bearer ${googleAccessToken}` },
-            json: {
-                aggregateBy: [
-                    { dataSourceId: "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps" },
-                    { dataSourceId: "derived:com.google.distance.delta:com.google.android.gms:from_steps<-merge_step_deltas" }],
-                    bucketByTime: { durationMillis: bucketSize },
-                    startTimeMillis,
-                    endTimeMillis
-                },
-                responseType: 'json'
-            })
-        
-        const mappedBuckets = response.body.bucket.map((bucket) => {
-            const {startTimeMillis, endTimeMillis} = bucket;
-            console.log({startTimeMillis, endTimeMillis});
-            const timeInMiddleOfPeriod = bucket.startTimeMillis + (bucket.endTimeMillis-startTimeMillis)/2
+  const startTimeMillis = dayjs().subtract(days - 1, "day").startOf('day').valueOf() + 1;
+  const endTimeMillis = dayjs().valueOf();
+  const bucketSize = 24*60*60*1000
 
-            return {
-                date: dayjs(parseInt(startTimeMillis)).format("YYYY-MM-DD"),
-                stepCount: bucket.dataset[0].point[0].value[0].intVal,
-                // steps2: bucket.dataset[1].point[0].value[0].fpVal
-            }
-        })
+  const response = await got(`https://www.googleapis.com/fitness/v1/users/${userId}/dataset:aggregate`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${googleAccessToken}` },
+    json: {
+      aggregateBy: [{ dataSourceId: "derived:com.google.step_count.delta:com.google.android.gms:estimated_steps" }],
+      bucketByTime: { durationMillis: bucketSize },
+      startTimeMillis,
+      endTimeMillis
+    },
+    responseType: 'json'
+  })
+      
+  const mappedBuckets = response.body.bucket.map((bucket) => {
+    const {startTimeMillis, endTimeMillis} = bucket;
+    console.log({startTimeMillis, endTimeMillis});
+    const timeInMiddleOfPeriod = bucket.startTimeMillis + (bucket.endTimeMillis-startTimeMillis)/2
 
-        return mappedBuckets;
+    return {
+        date: dayjs(parseInt(startTimeMillis)).format("YYYY-MM-DD"),
+        stepCount: bucket.dataset[0].point[0].value[0].intVal
+    }
+  })
+
+  return mappedBuckets;
 }
 
 exports.handler = async () => {
   try {
-    console.log("getting steps cron")
+    console.log("running steps cron")
     const users = await client.query(q.Map(
       q.Paginate(q.Documents(q.Collection('users'))),
       q.Lambda(x => q.Get(x))
     ));
-    console.log("got users", users)
-    const userBuckets = await Promise.all(users.data.map(async user => {
+    console.log("got users, count", users.data.length);
+    
+    const usersWithRefreshTokens = users.data.filter(user => user.data.google_refresh_token);
+    console.log("removed users without refreshTokens, count", usersWithRefreshTokens.length);
+
+    const userBuckets = await Promise.all(usersWithRefreshTokens.map(async user => {
       try {
+        console.log("getting freshAccessToken for user", { email: user.data.email, google_refresh_token: user.data.google_refresh_token});
         const { access_token: freshAccessToken } = await refreshAccessToken(user.data.google_refresh_token);
-        console.log("got freshAccessToken for user", freshAccessToken);
+        console.log("got freshAccessToken for user", { freshAccessToken, google_id: user.data.google_id });
 
 
-        const steps = await getStepsData(freshAccessToken);
+        const steps = await getStepsData(user.data.google_id, freshAccessToken);
         console.log("got steps for user", user.ref.id, steps);
 
         const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id), { data: { steps }}));
@@ -65,7 +69,7 @@ exports.handler = async () => {
         return steps;
 
       } catch (err){
-        console.error(err);
+        console.error(err.message);
         return [];
       }
     }));
