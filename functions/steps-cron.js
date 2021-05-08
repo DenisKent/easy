@@ -42,22 +42,26 @@ const getStepsData = async (googleAccessToken) => {
         return mappedBuckets;
 }
 
-exports.handler = async (event, _context) => {
+exports.handler = async () => {
   try {
+    console.log("getting steps cron")
     const users = await client.query(q.Map(
       q.Paginate(q.Documents(q.Collection('users'))),
       q.Lambda(x => q.Get(x))
     ));
-  
+    console.log("got users", users)
     const userBuckets = await Promise.all(users.data.map(async user => {
       try {
-        const {access_token: freshAccessToken, expires_in} = await refreshAccessToken(user.data.google_refresh_token);
-        const steps = await getStepsData(freshAccessToken);
-        const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id),
-        { data: { steps }}
-        ));
+        const { access_token: freshAccessToken } = await refreshAccessToken(user.data.google_refresh_token);
+        console.log("got freshAccessToken for user", freshAccessToken);
 
-        console.log("success", steps)
+
+        const steps = await getStepsData(freshAccessToken);
+        console.log("got steps for user", user.ref.id, steps);
+
+        const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id), { data: { steps }}));
+        console.log("updated user with new steps data", updatedUser)
+
         return steps;
 
       } catch (err){
@@ -65,18 +69,20 @@ exports.handler = async (event, _context) => {
         return [];
       }
     }));
+
+    console.log("got user buckets", userBuckets)
   
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ userBuckets })
-  };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ userBuckets })
+    };
 
-} catch (err){
+  } catch (err){
 
-  console.log("error", err)
-  return {
-    statusCode: 400,
-    body: JSON.stringify({})
+    console.log("error", err)
+    return {
+      statusCode: 400,
+      body: JSON.stringify({})
+    }
   }
-}
 }
