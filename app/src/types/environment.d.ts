@@ -4,3 +4,7 @@ declare namespace NodeJS {
     NODE_ENV: "development" | "production";
   }
 }
+
+interface Window {
+  gapi: any;
+}
