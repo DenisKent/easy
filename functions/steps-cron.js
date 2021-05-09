@@ -10,7 +10,7 @@ const client = new faunadb.Client({
 
 
 const getStepsData = async (googleAccessToken) => {
-  const days = 7;
+  const days = 14;
   const startTimeMillis = dayjs().subtract(days - 1, "day").startOf('day').valueOf() + 1;
   const endTimeMillis = dayjs().valueOf();
   const bucketSize = 24*60*60*1000
