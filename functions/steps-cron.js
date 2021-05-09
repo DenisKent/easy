@@ -9,13 +9,13 @@ const client = new faunadb.Client({
 })
 
 
-const getStepsData = async (userId, googleAccessToken) => {
+const getStepsData = async (googleAccessToken) => {
   const days = 7;
   const startTimeMillis = dayjs().subtract(days - 1, "day").startOf('day').valueOf() + 1;
   const endTimeMillis = dayjs().valueOf();
   const bucketSize = 24*60*60*1000
 
-  const response = await got(`https://www.googleapis.com/fitness/v1/users/${userId}/dataset:aggregate`, {
+  const response = await got(`https://www.googleapis.com/fitness/v1/users/me/dataset:aggregate`, {
     method: "POST",
     headers: { Authorization: `Bearer ${googleAccessToken}` },
     json: {
@@ -59,8 +59,7 @@ exports.handler = async () => {
         const { access_token: freshAccessToken } = await refreshAccessToken(user.data.google_refresh_token);
         console.log("got freshAccessToken for user", { freshAccessToken, google_id: user.data.google_id });
 
-
-        const steps = await getStepsData(user.data.google_id, freshAccessToken);
+        const steps = await getStepsData(freshAccessToken);
         console.log("got steps for user", user.ref.id, steps);
 
         const updatedUser = await client.query(q.Update(q.Ref(q.Collection("users"), user.ref.id), { data: { steps }}));
