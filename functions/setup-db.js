@@ -21,6 +21,7 @@ exports.handler = async (event, context) => {
 
     await Promise.all(collectionsToBeCreated.map(({name}) => client.query(q.CreateCollection({ name }))))
 
+
     
     const indexesExist = await Promise.all(indexes.map(index => client.query(q.Exists(q.Index(index.name)))));
     const indexObjects = indexes.map((indexConfig, i) => ({ exists: indexesExist[i], indexConfig}))
